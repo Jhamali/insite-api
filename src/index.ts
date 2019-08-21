@@ -1,30 +1,26 @@
 import 'reflect-metadata'
 import { importSchema } from 'graphql-import'
-import { ApolloServer } from 'apollo-server-express'
+import { ApolloServer, makeExecutableSchema } from 'apollo-server-express'
 import { createConnection } from 'typeorm'
-import * as express from 'express'
+import express from 'express'
 import * as bodyParser from 'body-parser'
 import * as path from 'path'
 
-const typeDefs = importSchema(path.join(__dirname, 'schema.graphql'))
-const resolvers = {
-  Query: {},
-}
+import Routes from './routes'
+import resolvers from './resolvers'
 
-const server = new ApolloServer({ typeDefs, resolvers })
 const app = express()
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
+app.use(Routes)
 
+const typeDefs = importSchema(path.join(__dirname, 'schema.graphql'))
+const schema = makeExecutableSchema({ typeDefs, resolvers })
+const server = new ApolloServer({ schema })
+//apply Express server to Apollo
 server.applyMiddleware({ app })
 
-app.post('/post', (req: express.Request, res: express.Response) => {
-  //Future route for accepting data!
-  console.log(req.body)
-  res.end()
-})
-
-createConnection().then(() => {
+createConnection().then(async () => {
   app.listen(8080, () => {
     console.log(`🚀  Server ready at localhost:8080${server.graphqlPath}`)
   })

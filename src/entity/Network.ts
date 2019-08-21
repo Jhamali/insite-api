@@ -5,7 +5,7 @@ import {
   BeforeInsert,
   BaseEntity,
 } from 'typeorm'
-import * as uuid from 'uuid/v4'
+import uuid from 'uuid/v4'
 
 @Entity()
 export class Network extends BaseEntity {

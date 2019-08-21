@@ -232,7 +232,3 @@ type Query {
   getAllClients: [Client]!
   getAllData(id: ID!): Payload!
 }
-
-type Subscription {
-  jsonAdded: String
-}
