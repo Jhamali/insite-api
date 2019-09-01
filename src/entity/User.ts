@@ -21,20 +21,27 @@ export default class User extends BaseEntity {
   @Column('text')
   user: string
 
-  @Column('text')
+  @Column({type:'text', default:'Command'})
   tty: string
 
   @Column('text')
   date: string
 
-  @Column('text')
+  @Column({type:'text', default:'127.0.1'})
   ip: string
 
-  @Column('text')
+  @Column({type:'text', default:'Command'})
   command: string
 
   @BeforeInsert()
   addId(){
     this.id = uuidv4();
+    this.user = this.id.toString()
+  }
+
+  @BeforeInsert()
+  getDate(){
+    this.date = new Date().toString()
+    this.timestamp = new Date().getTime()
   }
 }
